@@ -9,8 +9,8 @@ function App() {
   };
   return (
     <>
-      <TodoList todoList={todoList} />
       <AddTodoForm onAppTodo={addTodo} />
+      <TodoList todoList={todoList} />
     </>
   );
 }
