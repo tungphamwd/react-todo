@@ -2,36 +2,56 @@ import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
 import { useState, useEffect } from "react";
 
-const useSemiPersistentState = () => {
-  const [todoList, setTodoList] = useState(() => {
-    const savedTodoList = localStorage.getItem("savedTodoList");
-    return savedTodoList ? JSON.parse(savedTodoList) : [];
-  });
+function App() {
+  const [todoList, setTodoList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const fetchData = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({
+          data: {
+            todoList: localStorage.getItem("savedTodoList")
+              ? JSON.parse(localStorage.getItem("savedTodoList"))
+              : [],
+          },
+        });
+      }, 2000);
+    });
+
+    fetchData
+      .then((result) => {
+        setTodoList(result.data.todoList);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem("savedTodoList", JSON.stringify(todoList));
-  }, [todoList]);
-
-  return [todoList, setTodoList];
-};
-
-function App() {
-  const [todoList, setTodoList] = useSemiPersistentState();
+    if (!isLoading) {
+      localStorage.setItem("savedTodoList", JSON.stringify(todoList));
+    }
+  }, [todoList, isLoading]);
 
   const addTodo = (newTodo) => {
     setTodoList([...todoList, newTodo]);
   };
 
   const removeTodo = (id) => {
-    const newTodoList = todoList.filter(todo => {
+    const newTodoList = todoList.filter((todo) => {
       return todo.id !== id;
     });
-    setTodoList(newTodoList)
-  }
+    setTodoList(newTodoList);
+  };
   return (
     <>
       <AddTodoForm onAppTodo={addTodo} />
-      <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+      )}
     </>
   );
 }
