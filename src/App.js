@@ -1,6 +1,7 @@
 import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
 import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   const [todoList, setTodoList] = useState([]);
@@ -35,9 +36,9 @@ function App() {
 
   async function addTodo(todoTitle) {
     const options = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_TOKEN}`,
       },
       body: JSON.stringify({ fields: { title: todoTitle } }),
@@ -53,9 +54,12 @@ function App() {
       }
 
       const newTodo = await response.json();
-      setTodoList(prevTodo => [...prevTodo, { id: newTodo.id, title: newTodo.fields.title }]);
+      setTodoList((prevTodo) => [
+        ...prevTodo,
+        { id: newTodo.id, title: newTodo.fields.title },
+      ]);
     } catch (error) {
-      console.error('Add Todo Error:', error.message);
+      console.error("Add Todo Error:", error.message);
     }
   }
   useEffect(() => {
@@ -79,14 +83,24 @@ function App() {
     setTodoList(newTodoList);
   };
   return (
-    <>
-      <AddTodoForm onAppTodo={addTodo} />
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
-      )}
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <AddTodoForm onAppTodo={addTodo} />
+              {isLoading ? (
+                <p>Loading...</p>
+              ) : (
+                <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+              )}
+            </>
+          }
+        />
+        <Route path="/new" element={<h1>New Todo List</h1>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
