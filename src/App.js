@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
   async function fetchData() {
     const options = {
       method: "GET",
@@ -43,6 +44,7 @@ function App() {
       },
       body: JSON.stringify({ fields: { title: todoTitle } }),
     };
+
 
     const url = `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}`;
 
