@@ -9,7 +9,7 @@ const AddTodoForm = ({ onAppTodo }) => {
   };
   const handleAddTodo = (e) => {
     e.preventDefault();
-    onAppTodo({ id: Date.now(), title: todoTitle });
+    onAppTodo(todoTitle);
     setTodoTitle("");
   };
   return (
