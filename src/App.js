@@ -1,8 +1,7 @@
-import TodoList from "./components/TodoList";
-import AddTodoForm from "./components/AddTodoForm";
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
+import TodoContainer from "./components/TodoContainer";
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -95,11 +94,10 @@ function App() {
           path="/"
           element={
             <>
-              <AddTodoForm onAppTodo={addTodo} />
               {isLoading ? (
                 <p>Loading...</p>
               ) : (
-                <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+                <TodoContainer {...{ addTodo, removeTodo, todoList }} />
               )}
             </>
           }
