@@ -25,6 +25,6 @@ const AddTodoForm = ({ onAppTodo }) => {
   );
 };
 AddTodoForm.propTypes = {
-  onAddTodo: PropTypes.func.isRequired,
+  onAddTodo: PropTypes.func,
 };
 export default AddTodoForm;
