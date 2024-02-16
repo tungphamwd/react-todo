@@ -68,10 +68,6 @@ function App() {
   }, []);
 
   const removeTodo = async (id) => {
-    // const newTodoList = todoList.filter((todo) => {
-    //   return todo.id !== id;
-    // });
-    // setTodoList(newTodoList);
     const options = {
       method: "DELETE",
       headers: {
