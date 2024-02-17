@@ -1,9 +1,21 @@
 .ListItem {
-  color: blue;
+  color: darkslategray;
   margin: 10px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  padding: 20px;
+}
+
+.deleteIcon {
+  background-image: url(./icons/314759_can_trash_icon.png);
+  background-position: right;
+  background-repeat: no-repeat;
+  background-size: contain;
+  min-width: 30px;
+  min-height: 30px;
 }
 
 @media (max-width: 768px) {

@@ -21,7 +21,7 @@ const AddTodoForm = ({ onAppTodo }) => {
       >
         Title
       </InputWithLabel>
-      <button>Add</button>
+      <button style={{backgroundColor: '#007bff'}}>Add</button>
     </form>
   );
 };
