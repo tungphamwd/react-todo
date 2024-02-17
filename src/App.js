@@ -5,7 +5,7 @@ import TodoContainer from "./components/TodoContainer";
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [sortDirection, setSortDirection] = useState('asc')
   async function fetchData() {
     const options = {
       method: "GET",
@@ -14,7 +14,7 @@ function App() {
       },
     };
 
-    const url = `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}`;
+    const url = `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}?sort[0][field]=title&sort[0][direction]=${sortDirection}`;
 
     try {
       const response = await fetch(url, options);
@@ -64,7 +64,7 @@ function App() {
   }
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [sortDirection]);
 
   const removeTodo = async (id) => {
     const options = {
@@ -97,7 +97,7 @@ function App() {
               {isLoading ? (
                 <p>Loading...</p>
               ) : (
-                <TodoContainer {...{ addTodo, removeTodo, todoList }} />
+                <TodoContainer {...{ addTodo, removeTodo, todoList,setSortDirection,sortDirection }} />
               )}
             </>
           }
