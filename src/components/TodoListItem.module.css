@@ -1,6 +1,9 @@
 .ListItem {
   color: blue;
   margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 @media (max-width: 768px) {

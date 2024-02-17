@@ -9,6 +9,7 @@ const AddTodoForm = ({ onAppTodo }) => {
   };
   const handleAddTodo = (e) => {
     e.preventDefault();
+    if(!todoTitle) return;
     onAppTodo(todoTitle);
     setTodoTitle("");
   };
