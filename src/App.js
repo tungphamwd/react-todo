@@ -1,12 +1,11 @@
-import TodoList from "./TodoList";
-import AddTodoForm from "./AddTodoForm";
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import "./App.css";
+import TodoContainer from "./components/TodoContainer";
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [sortDirection, setSortDirection] = useState('asc')
   async function fetchData() {
     const options = {
       method: "GET",
@@ -15,7 +14,7 @@ function App() {
       },
     };
 
-    const url = `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}`;
+    const url = `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}?sort[0][field]=title&sort[0][direction]=${sortDirection}`;
 
     try {
       const response = await fetch(url, options);
@@ -45,7 +44,6 @@ function App() {
       body: JSON.stringify({ fields: { title: todoTitle } }),
     };
 
-
     const url = `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}`;
 
     try {
@@ -66,23 +64,28 @@ function App() {
   }
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [sortDirection]);
 
-  useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem("savedTodoList", JSON.stringify(todoList));
+  const removeTodo = async (id) => {
+    const options = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_TOKEN}`,
+      },
+    };
+
+    const url = `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_NAME}/${id}`;
+
+    try {
+      const response = await fetch(url, options);
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      fetchData();
+    } catch (error) {
+      console.error("Delete Todo Error:", error.message);
     }
-  }, [todoList, isLoading]);
-
-  // const addTodo = (newTodo) => {
-  //   setTodoList([...todoList, newTodo]);
-  // };
-
-  const removeTodo = (id) => {
-    const newTodoList = todoList.filter((todo) => {
-      return todo.id !== id;
-    });
-    setTodoList(newTodoList);
   };
   return (
     <BrowserRouter>
@@ -91,11 +94,10 @@ function App() {
           path="/"
           element={
             <>
-              <AddTodoForm onAppTodo={addTodo} />
               {isLoading ? (
                 <p>Loading...</p>
               ) : (
-                <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+                <TodoContainer {...{ addTodo, removeTodo, todoList,setSortDirection,sortDirection }} />
               )}
             </>
           }
